@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  gh-secrets:
+    image: node:12-alpine
+    volumes:
+      - ./:/app
+      - ./.gh-secrets:/home/node/.gh-secrets
+    working_dir: /app

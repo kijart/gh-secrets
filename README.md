@@ -1,5 +1,7 @@
 # GitHub action secrets CLI
 
+![npm](https://img.shields.io/npm/v/@kijart/gh-secrets) ![Publish NPM package](https://github.com/kijart/gh-secrets/workflows/Publish%20NPM%20package/badge.svg) ![Publish Docker image](https://github.com/kijart/gh-secrets/workflows/Publish%20Docker%20image/badge.svg) [![License](https://img.shields.io/github/license/kijart/gh-secrets)](https://github.com/kijart/gh-secrets/blob/master/LICENSE)
+
 GitHub actions secrets management CLI tool
 
 ## Setup

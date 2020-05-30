@@ -1,8 +1,9 @@
 {
-  "name": "gh-secrets",
+  "name": "@kijart/gh-secrets",
   "version": "1.0.0",
   "description": "GitHub actions secrets management CLI tool",
   "author": "Luis Miguel Vicente Fuentes",
+  "license": "MIT",
   "main": "bin/index.js",
   "bin": {
     "gh-secrets": "./bin/index.js"

@@ -1,0 +1,14 @@
+# dependencies
+/node_modules
+
+# secret files
+/.gh-secrets
+/secrets.env
+
+# IDEs
+
+# Visual Studio
+.vscode
+
+# misc
+.DS_Store

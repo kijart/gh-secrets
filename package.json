@@ -23,7 +23,7 @@
     "gh-secrets": "./bin/index.js"
   },
   "dependencies": {
-    "chalk": "4.0.0",
+    "chalk": "4.1.0",
     "dotenv": "8.2.0",
     "node-fetch": "2.6.0",
     "tweetsodium": "0.0.5",

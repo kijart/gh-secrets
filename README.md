@@ -37,24 +37,18 @@ GitHub actions secrets management CLI tool
 ## Usage
 
 ```txt
-Usage: gh-secrets <command> [options] <url>
+Usage: gh-secrets <command> [options] <url> [parameters]
 
 Commands:
-  gh-secrets list <url>                Lists all secrets available in a
-                                       repository without revealing their
-                                       encrypted values
-  gh-secrets show <name> <url>         Gets a single secret without revealing
-                                       its encrypted value
-  gh-secrets set <name> <value> <url>  Creates or updates a secret with an
-                                       encrypted value
-  gh-secrets setAll <file> <url>       Creates or updates a batch of secrets
-                                       with an encrypted values from a file
-  gh-secrets delete <name> <url>       Deletes a secret in a repository using
-                                       the secret name
+  gh-secrets list <url>                     Lists all secrets available in a repository/organization without revealing their encrypted values
+  gh-secrets get <name> <url>               Gets a single secret from a repository/organization without revealing its encrypted value
+  gh-secrets set <name> <value> <url> [--visibility all | private | selected]  Creates or updates a secret in a repository/organization with an encrypted value
+  gh-secrets setAll <file> <url> [--visibility all | private | selected] Creates or updates a batch of secrets in a repository/organization with an encrypted values from a file
+  gh-secrets delete <name> <url>            Deletes a secret in a repository/organization using the secret name
 
 Options:
-  -h, --help     Show help                                             [boolean]
-  -v, --version  Show version number                                   [boolean]
+  -h, --help     Show help            [boolean]
+  -v, --version  Show version number  [boolean]
 
 Examples:
   gh-secrets list https://github.com/owner/repository-name

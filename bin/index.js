@@ -21,7 +21,7 @@ const cli = () => {
       handler: (argv) => getSecrets(argv)
     })
     .command({
-      command: 'show <name> <url>',
+      command: 'get <name> <url>',
       desc: 'Gets a single secret from a repository/organization without revealing its encrypted value',
       handler: (argv) => getSecret(argv)
     })

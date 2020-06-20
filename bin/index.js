@@ -157,23 +157,29 @@ const _getRequestHeaders = () => {
   };
 };
 
-const _getGitHubOwnerUsername = (url) => {
-  const regex = /^https:\/\/github\.com\/([a-zA-Z0-9-_.]+)\/([a-zA-Z0-9-_.]+)/g;
+const _getPathSlice = (url) => {
+  const regex = /^https:\/\/github\.com\/([a-zA-Z0-9-_.]+)\/?([a-zA-Z0-9-_.]+)?\/?/g;
   const regexMatch = regex.exec(url);
 
   if (!regexMatch) {
-    throw chalk.bold.red('Error: wrong URL, expected URL: https://github.com/owner/repository-name');
+    throw chalk.bold.red(
+      'Error: wrong URL, expected URLs: https://github.com/owner or https://github.com/owner/repository-name'
+    );
   }
 
+  const owner = regexMatch[1];
+  const repo = regexMatch[2];
+
   return {
-    owner: regexMatch[1],
-    repo: regexMatch[2]
+    isOrgPath: !repo,
+    pathSlice: repo ? `repos/${owner}/${repo}` : `orgs/${owner}`
   };
 };
 
 const _printJSON = (input) => {
   console.log(JSON.stringify(input, null, 2));
 };
+
 // REQUESTS
 
 const _processResponse = async (response) => {
@@ -197,37 +203,37 @@ const _processResponse = async (response) => {
 
 const _getPublicKey = (args) => {
   const { url } = args;
-  const { owner, repo } = _getGitHubOwnerUsername(url);
+  const { pathSlice } = _getPathSlice(url);
   const options = _getRequestHeaders();
 
-  return fetch(`https://api.github.com/repos/${owner}/${repo}/actions/secrets/public-key`, options).then((response) =>
+  return fetch(`https://api.github.com/${pathSlice}/actions/secrets/public-key`, options).then((response) =>
     _processResponse(response)
   );
 };
 
 const _getSecrets = (args) => {
   const { url } = args;
-  const { owner, repo } = _getGitHubOwnerUsername(url);
+  const { pathSlice } = _getPathSlice(url);
   const options = _getRequestHeaders();
 
-  return fetch(`https://api.github.com/repos/${owner}/${repo}/actions/secrets`, options).then((response) =>
+  return fetch(`https://api.github.com/${pathSlice}/actions/secrets`, options).then((response) =>
     _processResponse(response)
   );
 };
 
 const _getSecret = (args) => {
   const { name, url } = args;
-  const { owner, repo } = _getGitHubOwnerUsername(url);
+  const { pathSlice } = _getPathSlice(url);
   const options = _getRequestHeaders();
 
-  return fetch(`https://api.github.com/repos/${owner}/${repo}/actions/secrets/${name}`, options).then((response) =>
+  return fetch(`https://api.github.com/${pathSlice}/actions/secrets/${name}`, options).then((response) =>
     _processResponse(response)
   );
 };
 
 const _setSecret = (args) => {
   const { name, encryptedValue, publicKeyId, url } = args;
-  const { owner, repo } = _getGitHubOwnerUsername(url);
+  const { isOrgPath, pathSlice } = _getPathSlice(url);
   const options = {
     ..._getRequestHeaders(),
     ...{
@@ -239,14 +245,14 @@ const _setSecret = (args) => {
     }
   };
 
-  return fetch(`https://api.github.com/repos/${owner}/${repo}/actions/secrets/${name}`, options).then((response) =>
+  return fetch(`https://api.github.com/${pathSlice}/actions/secrets/${name}`, options).then((response) =>
     _processResponse(response)
   );
 };
 
 const _deleteSecret = (args) => {
   const { name, url } = args;
-  const { owner, repo } = _getGitHubOwnerUsername(url);
+  const { pathSlice } = _getPathSlice(url);
   const options = {
     ..._getRequestHeaders(),
     ...{
@@ -254,7 +260,7 @@ const _deleteSecret = (args) => {
     }
   };
 
-  return fetch(`https://api.github.com/repos/${owner}/${repo}/actions/secrets/${name}`, options).then((response) =>
+  return fetch(`https://api.github.com/${pathSlice}/actions/secrets/${name}`, options).then((response) =>
     _processResponse(response)
   );
 };

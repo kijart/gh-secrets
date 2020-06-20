@@ -52,10 +52,21 @@ Options:
 
 Examples:
   gh-secrets list https://github.com/owner/repository-name
-  gh-secrets show SECRET_NAME https://github.com/owner/repository-name
+  gh-secrets get SECRET_NAME https://github.com/owner/repository-name
   gh-secrets set SECRET_NAME value https://github.com/owner/repository-name
   gh-secrets setAll secrets.env https://github.com/owner/repository-name
   gh-secrets delete SECRET_NAME https://github.com/owner/repository-name
+  gh-secrets list https://github.com/owner
+  gh-secrets get SECRET_NAME https://github.com/owner
+  gh-secrets set SECRET_NAME value https://github.com/owner
+  gh-secrets set SECRET_NAME value https://github.com/owner --visibility all
+  gh-secrets set SECRET_NAME value https://github.com/owner --visibility private
+  gh-secrets set SECRET_NAME value https://github.com/owner --visibility selected
+  gh-secrets setAll secrets.env https://github.com/owner
+  gh-secrets setAll secrets.env https://github.com/owner --visibility all
+  gh-secrets setAll secrets.env https://github.com/owner --visibility private
+  gh-secrets setAll secrets.env https://github.com/owner --visibility selected
+  gh-secrets delete SECRET_NAME https://github.com/owner
 ```
 
 ### Local

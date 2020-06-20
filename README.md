@@ -73,42 +73,43 @@ Examples:
 
 1. Install _gh-secrets_ globally: `npm install -g @kijart/gh-secrets`
 1. Run examples:
-    - help: `gh-secrets -h`
-    - list: `gh-secrets list https://github.com/owner/repository-name`
-    - setAll: `gh-secrets setAll /app/secrets.env https://github.com/owner/repository-name`
+   - help: `gh-secrets -h`
+   - list: `gh-secrets list https://github.com/owner/repository-name`
+   - setAll: `gh-secrets setAll /app/secrets.env https://github.com/owner/repository-name`
 
 ### Docker
 
 1. Build from source: `docker pull kijart/gh-secrets`
 1. Run examples:
-    - help: `docker run --rm -it -v $HOME/.gh-secrets:/home/node/.gh-secrets gh-secrets -h`
-    - list: `docker run --rm -it -v $HOME/.gh-secrets:/home/node/.gh-secrets gh-secrets list https://github.com/owner/repository-name`
-    - setAll:
 
-        ```bash
-        docker run --rm -it \
-        -v $HOME/.gh-secrets:/home/node/.gh-secrets \
-        -v $(pwd)/secrets.env:/app/secrets.env \
-        kijart/gh-secrets setAll /app/secrets.env https://github.com/owner/repository-name`
-        ```
+   - help: `docker run --rm -it -v $HOME/.gh-secrets:/home/node/.gh-secrets gh-secrets -h`
+   - list: `docker run --rm -it -v $HOME/.gh-secrets:/home/node/.gh-secrets gh-secrets list https://github.com/owner/repository-name`
+   - setAll:
+
+     ```bash
+     docker run --rm -it \
+     -v $HOME/.gh-secrets:/home/node/.gh-secrets \
+     -v $(pwd)/secrets.env:/app/secrets.env \
+     kijart/gh-secrets setAll /app/secrets.env https://github.com/owner/repository-name`
+     ```
 
 ### Docker Compose
 
 1. Build docker service: `docker-compose up --no-start`
 1. Run examples:
-    - help: `docker-compose run --rm gh-secrets -h`
-    - list: `docker-compose run --rm gh-secrets list https://github.com/owner/repository-name`
-    - setAll: `docker-compose run --rm gh-secrets setAll secrets.env https://github.com/owner/repository-name`
+   - help: `docker-compose run --rm gh-secrets -h`
+   - list: `docker-compose run --rm gh-secrets list https://github.com/owner/repository-name`
+   - setAll: `docker-compose run --rm gh-secrets setAll secrets.env https://github.com/owner/repository-name`
 
 ### Install from source
 
 1. Install project dependencies: `npm install`
 1. Install project binary globally: `npm install -g .`
-1. Update _$HOME/.gh-secrets_ content with valid values
+1. Update _\$HOME/.gh-secrets_ content with valid values
 1. Run examples:
-    - help: `gh-secrets -h`
-    - list: `gh-secrets list https://github.com/owner/repository-name`
-    - setAll: `gh-secrets setAll /app/secrets.env https://github.com/owner/repository-name`
+   - help: `gh-secrets -h`
+   - list: `gh-secrets list https://github.com/owner/repository-name`
+   - setAll: `gh-secrets setAll /app/secrets.env https://github.com/owner/repository-name`
 
 ## Documentation
 

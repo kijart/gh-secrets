@@ -17,27 +17,27 @@ const cli = () => {
     .usage('Usage: $0 <command> [options] <url>')
     .command({
       command: 'list <url>',
-      desc: 'Lists all secrets available in a repository without revealing their encrypted values',
+      desc: 'Lists all secrets available in a repository/organization without revealing their encrypted values',
       handler: (argv) => getSecrets(argv)
     })
     .command({
       command: 'show <name> <url>',
-      desc: 'Gets a single secret without revealing its encrypted value',
+      desc: 'Gets a single secret from a repository/organization without revealing its encrypted value',
       handler: (argv) => getSecret(argv)
     })
     .command({
       command: 'set <name> <value> <url>',
-      desc: 'Creates or updates a secret with an encrypted value',
+      desc: 'Creates or updates a secret in a repository/organization with an encrypted value',
       handler: (argv) => setSecret(argv)
     })
     .command({
       command: 'setAll <file> <url>',
-      desc: 'Creates or updates a batch of secrets with an encrypted values from a file',
+      desc: 'Creates or updates a batch of secrets in a repository/organization with an encrypted values from a file',
       handler: (argv) => setSecrets(argv)
     })
     .command({
       command: 'delete <name> <url>',
-      desc: 'Deletes a secret in a repository using the secret name',
+      desc: 'Deletes a secret in a repository/organization using the secret name',
       handler: (argv) => deleteSecret(argv)
     })
     .example('$0 list https://github.com/owner/repository-name')

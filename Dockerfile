@@ -12,11 +12,11 @@ ENV APP_WORKING_DIR /app
 WORKDIR ${APP_INSTALL_DIR}/
 
 # copy app files
-COPY package.json /${APP_INSTALL_DIR}/
+COPY package.json package-lock.json /${APP_INSTALL_DIR}/
 COPY bin/ /${APP_INSTALL_DIR}/bin/
 
 # install dependencies
-RUN npm install
+RUN npm ci
 # install binary
 RUN npm install -g .
 

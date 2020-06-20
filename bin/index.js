@@ -26,12 +26,12 @@ const cli = () => {
       handler: (argv) => getSecret(argv)
     })
     .command({
-      command: 'set <name> <value> <url>',
+      command: 'set <name> <value> <url> [--visibility all | private | selected]',
       desc: 'Creates or updates a secret in a repository/organization with an encrypted value',
       handler: (argv) => setSecret(argv)
     })
     .command({
-      command: 'setAll <file> <url>',
+      command: 'setAll <file> <url> [--visibility all | private | selected]',
       desc: 'Creates or updates a batch of secrets in a repository/organization with an encrypted values from a file',
       handler: (argv) => setSecrets(argv)
     })
@@ -78,14 +78,14 @@ const getSecret = async (args) => {
 };
 
 const setSecret = async (args) => {
-  const { name, value, url } = args;
+  const { name, value, url, visibility } = args;
   const resGetPublicKey = await _getPublicKey(args);
 
   if (resGetPublicKey.status === 'ok') {
     const publicKey = resGetPublicKey.result.key;
     const publicKeyId = resGetPublicKey.result.key_id;
     const encryptedValue = _encrypt(value, publicKey);
-    const resSetSecret = await _setSecret({ name, encryptedValue, publicKeyId, url });
+    const resSetSecret = await _setSecret({ name, encryptedValue, publicKeyId, url, visibility });
 
     if (resSetSecret.status === 'ok') {
       console.log(chalk.bold.green(name), 'setted');
@@ -232,16 +232,25 @@ const _getSecret = (args) => {
 };
 
 const _setSecret = (args) => {
-  const { name, encryptedValue, publicKeyId, url } = args;
+  const { name, encryptedValue, publicKeyId, url, visibility } = args;
   const { isOrgPath, pathSlice } = _getPathSlice(url);
+  const allowedVisibilityValues = ['all', 'private', 'selected'];
+  const defaultVisibilityValue = 'private';
+
+  let payload = {
+    encrypted_value: encryptedValue,
+    key_id: publicKeyId
+  };
+
+  if (isOrgPath) {
+    payload.visibility = allowedVisibilityValues.includes(visibility) ? visibility : defaultVisibilityValue;
+  }
+
   const options = {
     ..._getRequestHeaders(),
     ...{
       method: 'put',
-      body: JSON.stringify({
-        encrypted_value: encryptedValue,
-        key_id: publicKeyId
-      })
+      body: JSON.stringify(payload)
     }
   };
 

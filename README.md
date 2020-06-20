@@ -4,6 +4,28 @@
 
 GitHub actions secrets management CLI tool
 
+## Features
+
+### Repository
+
+- [x] List repository secrets
+- [x] Get a repository secret
+- [x] Create or update a repository secret
+- [x] Create or update a batch of repository secrets
+- [x] Delete a repository secret
+
+### Organization
+
+- [x] List organization secrets
+- [x] Get an organization secret
+- [x] Create or update an organization secret
+- [x] Create or update a batch of organization secrets
+- [x] Delete an organization secret
+- [ ] List selected repositories for an organization secret
+- [ ] Set selected repositories for an organization secret
+- [ ] Add selected repository to an organization secret
+- [ ] Remove selected repository from an organization secret
+
 ## Setup
 
 1. Generate a [GitHub personal access token](https://github.com/settings/tokens) with **repo** permissions

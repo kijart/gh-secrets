@@ -107,7 +107,7 @@ const setSecret = async (args) => {
 };
 
 const setSecrets = async (args) => {
-  const { file, url } = args;
+  const { file, url, visibility } = args;
 
   if (fs.existsSync(file)) {
     secrets = dotenv.parse(fs.readFileSync(file));
@@ -115,6 +115,7 @@ const setSecrets = async (args) => {
     for (const key in secrets) {
       setSecret({
         url,
+        visibility,
         name: key,
         value: secrets[key]
       });

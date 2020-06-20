@@ -14,7 +14,7 @@ dotenv.config({
 
 const cli = () => {
   argv
-    .usage('Usage: $0 <command> [options] <url>')
+    .usage('Usage: $0 <command> [options] <url> [parameters]')
     .command({
       command: 'list <url>',
       desc: 'Lists all secrets available in a repository/organization without revealing their encrypted values',

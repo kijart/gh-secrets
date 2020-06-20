@@ -14,37 +14,48 @@ dotenv.config({
 
 const cli = () => {
   argv
-    .usage('Usage: $0 <command> [options] <url>')
+    .usage('Usage: $0 <command> [options] <url> [parameters]')
     .command({
       command: 'list <url>',
-      desc: 'Lists all secrets available in a repository without revealing their encrypted values',
+      desc: 'Lists all secrets available in a repository/organization without revealing their encrypted values',
       handler: (argv) => getSecrets(argv)
     })
     .command({
-      command: 'show <name> <url>',
-      desc: 'Gets a single secret without revealing its encrypted value',
+      command: 'get <name> <url>',
+      desc: 'Gets a single secret from a repository/organization without revealing its encrypted value',
       handler: (argv) => getSecret(argv)
     })
     .command({
-      command: 'set <name> <value> <url>',
-      desc: 'Creates or updates a secret with an encrypted value',
+      command: 'set <name> <value> <url> [--visibility all | private | selected]',
+      desc: 'Creates or updates a secret in a repository/organization with an encrypted value',
       handler: (argv) => setSecret(argv)
     })
     .command({
-      command: 'setAll <file> <url>',
-      desc: 'Creates or updates a batch of secrets with an encrypted values from a file',
+      command: 'setAll <file> <url> [--visibility all | private | selected]',
+      desc: 'Creates or updates a batch of secrets in a repository/organization with an encrypted values from a file',
       handler: (argv) => setSecrets(argv)
     })
     .command({
       command: 'delete <name> <url>',
-      desc: 'Deletes a secret in a repository using the secret name',
+      desc: 'Deletes a secret in a repository/organization using the secret name',
       handler: (argv) => deleteSecret(argv)
     })
     .example('$0 list https://github.com/owner/repository-name')
-    .example('$0 show SECRET_NAME https://github.com/owner/repository-name')
+    .example('$0 get SECRET_NAME https://github.com/owner/repository-name')
     .example('$0 set SECRET_NAME value https://github.com/owner/repository-name')
     .example('$0 setAll secrets.env https://github.com/owner/repository-name')
     .example('$0 delete SECRET_NAME https://github.com/owner/repository-name')
+    .example('$0 list https://github.com/owner')
+    .example('$0 get SECRET_NAME https://github.com/owner')
+    .example('$0 set SECRET_NAME value https://github.com/owner')
+    .example('$0 set SECRET_NAME value https://github.com/owner --visibility all')
+    .example('$0 set SECRET_NAME value https://github.com/owner --visibility private')
+    .example('$0 set SECRET_NAME value https://github.com/owner --visibility selected')
+    .example('$0 setAll secrets.env https://github.com/owner')
+    .example('$0 setAll secrets.env https://github.com/owner --visibility all')
+    .example('$0 setAll secrets.env https://github.com/owner --visibility private')
+    .example('$0 setAll secrets.env https://github.com/owner --visibility selected')
+    .example('$0 delete SECRET_NAME https://github.com/owner')
     .demandCommand(1, 1, 'Use one command before moving on')
     .recommendCommands()
     .scriptName('gh-secrets')
@@ -78,14 +89,14 @@ const getSecret = async (args) => {
 };
 
 const setSecret = async (args) => {
-  const { name, value, url } = args;
+  const { name, value, url, visibility } = args;
   const resGetPublicKey = await _getPublicKey(args);
 
   if (resGetPublicKey.status === 'ok') {
     const publicKey = resGetPublicKey.result.key;
     const publicKeyId = resGetPublicKey.result.key_id;
     const encryptedValue = _encrypt(value, publicKey);
-    const resSetSecret = await _setSecret({ name, encryptedValue, publicKeyId, url });
+    const resSetSecret = await _setSecret({ name, encryptedValue, publicKeyId, url, visibility });
 
     if (resSetSecret.status === 'ok') {
       console.log(chalk.bold.green(name), 'setted');
@@ -102,7 +113,7 @@ const setSecret = async (args) => {
 };
 
 const setSecrets = async (args) => {
-  const { file, url } = args;
+  const { file, url, visibility } = args;
 
   if (fs.existsSync(file)) {
     secrets = dotenv.parse(fs.readFileSync(file));
@@ -110,6 +121,7 @@ const setSecrets = async (args) => {
     for (const key in secrets) {
       setSecret({
         url,
+        visibility,
         name: key,
         value: secrets[key]
       });
@@ -157,23 +169,29 @@ const _getRequestHeaders = () => {
   };
 };
 
-const _getGitHubOwnerUsername = (url) => {
-  const regex = /^https:\/\/github\.com\/([a-zA-Z0-9-_.]+)\/([a-zA-Z0-9-_.]+)/g;
+const _getPathSlice = (url) => {
+  const regex = /^https:\/\/github\.com\/([a-zA-Z0-9-_.]+)\/?([a-zA-Z0-9-_.]+)?\/?/g;
   const regexMatch = regex.exec(url);
 
   if (!regexMatch) {
-    throw chalk.bold.red('Error: wrong URL, expected URL: https://github.com/owner/repository-name');
+    throw chalk.bold.red(
+      'Error: wrong URL, expected URLs: https://github.com/owner or https://github.com/owner/repository-name'
+    );
   }
 
+  const owner = regexMatch[1];
+  const repo = regexMatch[2];
+
   return {
-    owner: regexMatch[1],
-    repo: regexMatch[2]
+    isOrgPath: !repo,
+    pathSlice: repo ? `repos/${owner}/${repo}` : `orgs/${owner}`
   };
 };
 
 const _printJSON = (input) => {
   console.log(JSON.stringify(input, null, 2));
 };
+
 // REQUESTS
 
 const _processResponse = async (response) => {
@@ -197,56 +215,65 @@ const _processResponse = async (response) => {
 
 const _getPublicKey = (args) => {
   const { url } = args;
-  const { owner, repo } = _getGitHubOwnerUsername(url);
+  const { pathSlice } = _getPathSlice(url);
   const options = _getRequestHeaders();
 
-  return fetch(`https://api.github.com/repos/${owner}/${repo}/actions/secrets/public-key`, options).then((response) =>
+  return fetch(`https://api.github.com/${pathSlice}/actions/secrets/public-key`, options).then((response) =>
     _processResponse(response)
   );
 };
 
 const _getSecrets = (args) => {
   const { url } = args;
-  const { owner, repo } = _getGitHubOwnerUsername(url);
+  const { pathSlice } = _getPathSlice(url);
   const options = _getRequestHeaders();
 
-  return fetch(`https://api.github.com/repos/${owner}/${repo}/actions/secrets`, options).then((response) =>
+  return fetch(`https://api.github.com/${pathSlice}/actions/secrets`, options).then((response) =>
     _processResponse(response)
   );
 };
 
 const _getSecret = (args) => {
   const { name, url } = args;
-  const { owner, repo } = _getGitHubOwnerUsername(url);
+  const { pathSlice } = _getPathSlice(url);
   const options = _getRequestHeaders();
 
-  return fetch(`https://api.github.com/repos/${owner}/${repo}/actions/secrets/${name}`, options).then((response) =>
+  return fetch(`https://api.github.com/${pathSlice}/actions/secrets/${name}`, options).then((response) =>
     _processResponse(response)
   );
 };
 
 const _setSecret = (args) => {
-  const { name, encryptedValue, publicKeyId, url } = args;
-  const { owner, repo } = _getGitHubOwnerUsername(url);
+  const { name, encryptedValue, publicKeyId, url, visibility } = args;
+  const { isOrgPath, pathSlice } = _getPathSlice(url);
+  const allowedVisibilityValues = ['all', 'private', 'selected'];
+  const defaultVisibilityValue = 'private';
+
+  let payload = {
+    encrypted_value: encryptedValue,
+    key_id: publicKeyId
+  };
+
+  if (isOrgPath) {
+    payload.visibility = allowedVisibilityValues.includes(visibility) ? visibility : defaultVisibilityValue;
+  }
+
   const options = {
     ..._getRequestHeaders(),
     ...{
       method: 'put',
-      body: JSON.stringify({
-        encrypted_value: encryptedValue,
-        key_id: publicKeyId
-      })
+      body: JSON.stringify(payload)
     }
   };
 
-  return fetch(`https://api.github.com/repos/${owner}/${repo}/actions/secrets/${name}`, options).then((response) =>
+  return fetch(`https://api.github.com/${pathSlice}/actions/secrets/${name}`, options).then((response) =>
     _processResponse(response)
   );
 };
 
 const _deleteSecret = (args) => {
   const { name, url } = args;
-  const { owner, repo } = _getGitHubOwnerUsername(url);
+  const { pathSlice } = _getPathSlice(url);
   const options = {
     ..._getRequestHeaders(),
     ...{
@@ -254,7 +281,7 @@ const _deleteSecret = (args) => {
     }
   };
 
-  return fetch(`https://api.github.com/repos/${owner}/${repo}/actions/secrets/${name}`, options).then((response) =>
+  return fetch(`https://api.github.com/${pathSlice}/actions/secrets/${name}`, options).then((response) =>
     _processResponse(response)
   );
 };

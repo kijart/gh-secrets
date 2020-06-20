@@ -28,7 +28,10 @@ GitHub actions secrets management CLI tool
 
 ## Setup
 
-1. Generate a [GitHub personal access token](https://github.com/settings/tokens) with **repo** permissions
+1. Generate a [GitHub Personal Access Token](https://github.com/settings/tokens)
+   - select **repo** scope permissions to manage repositories level secrets
+   - select **admin:org** scope permissions to manage organization level secrets
+   - select **repo, admin:org** scope permissions to manage repositories and organization level secrets
 1. Save and update _.gh-secrets_ file in the user home directory: `cp .gh-secrets.example $HOME/.gh-secrets`
 
 ## Usage

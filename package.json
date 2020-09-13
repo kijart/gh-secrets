@@ -6,9 +6,19 @@
   "license": "MIT",
   "keywords": [
     "github",
+    "action",
     "actions",
+    "github action",
+    "github actions",
+    "github secrets",
+    "secret",
     "secrets",
-    "cli"
+    "workflow",
+    "workflows",
+    "cli",
+    "tool",
+    "ci/cd",
+    "gh-secrets"
   ],
   "repository": {
     "type": "git",

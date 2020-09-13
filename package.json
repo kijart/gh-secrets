@@ -1,14 +1,24 @@
 {
   "name": "@kijart/gh-secrets",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "GitHub actions secrets management CLI tool",
   "author": "Luis Miguel Vicente Fuentes",
   "license": "MIT",
   "keywords": [
     "github",
+    "action",
     "actions",
+    "github action",
+    "github actions",
+    "github secrets",
+    "secret",
     "secrets",
-    "cli"
+    "workflow",
+    "workflows",
+    "cli",
+    "tool",
+    "ci/cd",
+    "gh-secrets"
   ],
   "repository": {
     "type": "git",
@@ -27,6 +37,6 @@
     "dotenv": "8.2.0",
     "node-fetch": "2.6.1",
     "tweetsodium": "0.0.5",
-    "yargs": "15.3.1"
+    "yargs": "16.0.3"
   }
 }

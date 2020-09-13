@@ -27,6 +27,6 @@
     "dotenv": "8.2.0",
     "node-fetch": "2.6.1",
     "tweetsodium": "0.0.5",
-    "yargs": "15.3.1"
+    "yargs": "16.0.3"
   }
 }

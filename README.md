@@ -1,8 +1,14 @@
 # GitHub action secrets CLI
 
-![npm](https://img.shields.io/npm/v/@kijart/gh-secrets) ![Publish NPM package](https://github.com/kijart/gh-secrets/workflows/Publish%20NPM%20package/badge.svg) ![Publish Docker image](https://github.com/kijart/gh-secrets/workflows/Publish%20Docker%20image/badge.svg) [![License](https://img.shields.io/github/license/kijart/gh-secrets)](https://github.com/kijart/gh-secrets/blob/master/LICENSE)
+[![npm](https://img.shields.io/npm/v/@kijart/gh-secrets)](https://www.npmjs.com/package/@kijart/gh-secrets) [![Publish NPM package](https://github.com/kijart/gh-secrets/workflows/Publish%20NPM%20package/badge.svg)](https://www.npmjs.com/package/@kijart/gh-secrets) [![Publish Docker image](https://github.com/kijart/gh-secrets/workflows/Publish%20Docker%20image/badge.svg)](https://hub.docker.com/r/kijart/gh-secrets) [![License](https://img.shields.io/github/license/kijart/gh-secrets)](https://github.com/kijart/gh-secrets/blob/master/LICENSE)
 
 GitHub actions secrets management CLI tool
+
+Available in:
+
+- Node (NPM registry): <https://www.npmjs.com/package/@kijart/gh-secrets>
+- Node (GitHub registry): <https://github.com/kijart/gh-secrets/packages>
+- Docker: <https://hub.docker.com/r/kijart/gh-secrets>
 
 ## Features
 

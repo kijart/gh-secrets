@@ -2,6 +2,8 @@
 
 [![npm](https://img.shields.io/npm/v/@kijart/gh-secrets)](https://www.npmjs.com/package/@kijart/gh-secrets) [![Publish NPM package](https://github.com/kijart/gh-secrets/workflows/Publish%20NPM%20package/badge.svg)](https://www.npmjs.com/package/@kijart/gh-secrets) [![Publish Docker image](https://github.com/kijart/gh-secrets/workflows/Publish%20Docker%20image/badge.svg)](https://hub.docker.com/r/kijart/gh-secrets) [![License](https://img.shields.io/github/license/kijart/gh-secrets)](https://github.com/kijart/gh-secrets/blob/master/LICENSE)
 
+> **⚠️ DEPRECATED: this project will not be longer maintained, instead, GitHub has published a [gh cli](https://cli.github.com/manual/gh) to [manage secrets](https://cli.github.com/manual/gh_secret) among other features of its ecosystem.**
+
 GitHub actions secrets management CLI tool
 
 Available in:

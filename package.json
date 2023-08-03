@@ -1,6 +1,6 @@
 {
   "name": "@kijart/gh-secrets",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "GitHub actions secrets management CLI tool",
   "author": "Luis Miguel Vicente Fuentes",
   "license": "MIT",
